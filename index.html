@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dinner Decider</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div style="position:fixed;top:1.5rem;right:4.5rem;z-index:3002;">
+        <select id="lang-switcher" aria-label="Language switcher">
+            <option value="en">EN</option>
+            <option value="tr">TR</option>
+            <option value="fr">FR</option>
+        </select>
+    </div>
+    <div class="main-container">
+        <h1>Dinner Decider</h1>
+        <div class="ingredient-select-group">
+            <div id="custom-ingredient-dropdown" class="custom-dropdown">
+                <div id="selected-ingredients" class="selected-ingredients"></div>
+                <input id="ingredient-search-input" type="text" placeholder="Type to search ingredients..." autocomplete="off" />
+                <ul id="ingredient-suggestions" class="suggestions-list"></ul>
+            </div>
+            <button id="find-recipe-btn">Find a Recipe</button>
+            <button id="surprise-btn">Surprise Me!</button>
+            <button id="dark-mode-toggle" aria-label="Toggle dark mode">🌙</button>
+        </div>
+        <button id="show-favorites-btn" style="margin-bottom:1.2rem;padding:0.5rem 1.5rem;border-radius:8px;background:var(--primary);color:#fff;border:none;box-shadow:0 2px 8px var(--shadow);font-size:1rem;">❤️ Favorites</button>
+        <div class="filter-card">
+            <div class="calorie-filter-group" style="display:flex;align-items:center;gap:0.7rem;">
+                <input type="number" id="min-calories" placeholder="Min Calories" min="0" style="width:110px;" />
+                <span style="color:#888;">-</span>
+                <input type="number" id="max-calories" placeholder="Max Calories" min="0" style="width:110px;" />
+                <select id="food-type" style="padding:0.4rem 0.7rem;">
+                    <option value="">Any Type</option>
+                    <option value="main course">Main Course</option>
+                    <option value="side dish">Side Dish</option>
+                    <option value="dessert">Dessert</option>
+                    <option value="appetizer">Appetizer</option>
+                    <option value="breakfast">Breakfast</option>
+                    <option value="soup">Soup</option>
+                    <option value="beverage">Beverage</option>
+                    <option value="snack">Snack</option>
+                    <option value="salad">Salad</option>
+                    <option value="bread">Bread</option>
+                </select>
+                <button id="calorie-filter-btn" style="padding:0.4rem 1.1rem;">Filter</button>
+            </div>
+        </div>
+        <div id="recipe-results"></div>
+        <div id="spinner"><div class="spinner" aria-label="Loading"></div></div>
+        <div id="toast" role="alert" aria-live="polite"></div>
+    </div>
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html> 
