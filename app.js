@@ -38,20 +38,21 @@ async function getRecipesByIngredient(ingredient) {
 }
 
 // Spoonacular API key
-const SPOONACULAR_API_KEY = process.env.SPOONACULAR_API_KEY;
+// const SPOONACULAR_API_KEY = process.env.SPOONACULAR_API_KEY;
 
 // Search recipes by ingredients, calories, and type
 async function getRecipesByIngredients(ingredients, minCalories, maxCalories, foodType) {
     if (!ingredients.length) return null;
-    const query = ingredients.join(',');
-    let endpoint = `https://api.spoonacular.com/recipes/complexSearch?includeIngredients=${encodeURIComponent(query)}&addRecipeNutrition=true&number=12&apiKey=${SPOONACULAR_API_KEY}`;
-    if (minCalories) endpoint += `&minCalories=${minCalories}`;
-    if (maxCalories) endpoint += `&maxCalories=${maxCalories}`;
-    if (foodType) endpoint += `&type=${encodeURIComponent(foodType)}`;
+    const params = new URLSearchParams();
+    params.append('ingredients', ingredients.join(','));
+    if (minCalories) params.append('minCalories', minCalories);
+    if (maxCalories) params.append('maxCalories', maxCalories);
+    if (foodType) params.append('foodType', foodType);
+    const endpoint = `/api/recipes?${params.toString()}`;
     try {
         const response = await fetch(endpoint);
         const data = await response.json();
-        return data.results || [];
+        return data || [];
     } catch (error) {
         console.error('Error fetching recipes:', error);
         return null;
@@ -60,7 +61,7 @@ async function getRecipesByIngredients(ingredients, minCalories, maxCalories, fo
 
 // Get full recipe details (including nutrition)
 async function getRecipeDetailsById(id) {
-    const endpoint = `https://api.spoonacular.com/recipes/${id}/information?includeNutrition=true&apiKey=${SPOONACULAR_API_KEY}`;
+    const endpoint = `/api/recipe-details?id=${id}`;
     try {
         const response = await fetch(endpoint);
         const data = await response.json();
@@ -285,12 +286,12 @@ window.addEventListener('DOMContentLoaded', async () => {
         resultsDiv.textContent = t('fetchingSurprise');
         try {
             const foodType = document.getElementById('food-type').value;
-            let endpoint = `https://api.spoonacular.com/recipes/random?number=1&apiKey=${SPOONACULAR_API_KEY}`;
-            if (foodType) endpoint += `&tags=${encodeURIComponent(foodType)}`;
-            const response = await fetch(endpoint);
+            const params = new URLSearchParams();
+            params.append('foodType', foodType);
+            const response = await fetch(`/api/surprise?${params.toString()}`);
             if (!response.ok) throw new Error('Network response was not ok');
             const data = await response.json();
-            const meal = data.recipes && data.recipes[0] ? data.recipes[0] : null;
+            const meal = data ? data : null;
             if (meal) {
                 // Fetch full details with nutrition
                 const details = await getRecipeDetailsById(meal.id);
